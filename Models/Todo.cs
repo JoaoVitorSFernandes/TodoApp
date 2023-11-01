@@ -11,7 +11,7 @@ namespace TodoApp.Models
         public bool Status { get; set; }
         public DateTime? Date { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public IList<SubTodo> SubTodo { get; set; }
+        public List<SubTodo> SubTodo { get; set; } = new();
 
         public Todos ListTasks { get; set; }
     }

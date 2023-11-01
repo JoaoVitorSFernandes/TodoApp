@@ -13,10 +13,14 @@ C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Desig
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Sqlite.dll
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Microsoft.OpenApi.dll
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\SQLitePCLRaw.batteries_v2.dll
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\SQLitePCLRaw.core.dll
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\SQLitePCLRaw.provider.e_sqlite3.dll
+C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\System.CodeDom.dll
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\runtimes\alpine-arm\native\libe_sqlite3.so
 C:\Users\Seidor\dev\TodoApp\bin\Debug\net7.0\runtimes\alpine-arm64\native\libe_sqlite3.so
@@ -46,6 +50,7 @@ C:\Users\Seidor\dev\TodoApp\obj\Debug\net7.0\TodoApp.GeneratedMSBuildEditorConfi
 C:\Users\Seidor\dev\TodoApp\obj\Debug\net7.0\TodoApp.AssemblyInfoInputs.cache
 C:\Users\Seidor\dev\TodoApp\obj\Debug\net7.0\TodoApp.AssemblyInfo.cs
 C:\Users\Seidor\dev\TodoApp\obj\Debug\net7.0\TodoApp.csproj.CoreCompileInputs.cache
+C:\Users\Seidor\dev\TodoApp\obj\Debug\net7.0\TodoApp.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Seidor\dev\TodoApp\obj\Debug\net7.0\TodoApp.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Seidor\dev\TodoApp\obj\Debug\net7.0\staticwebassets\msbuild.TodoApp.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\Seidor\dev\TodoApp\obj\Debug\net7.0\staticwebassets\msbuild.build.TodoApp.props

@@ -46,6 +46,11 @@ namespace TodoApp.Data.Mappings
                 .WithOne(x => x.Todo)
                 .HasConstraintName("FK_SubTask_Task")
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(x => x.ListTasks)
+                .WithMany(x => x.Tasks)
+                .HasConstraintName("FK_Task_Tasks")
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

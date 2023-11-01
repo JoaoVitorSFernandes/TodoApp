@@ -7,6 +7,6 @@ namespace TodoApp.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<Todo> Tasks { get; set; }
+        public List<Todo> Tasks { get; set; } = new();
     }
 }
