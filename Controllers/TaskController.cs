@@ -95,7 +95,7 @@ namespace TodoApp.Controllers
             {
                 return StatusCode(500, "02XE5 - Não foi possivel atualizar essa lista de tarefas");
             }
-            catch (Exception ex)
+            catch
             {
                 return StatusCode(500, "02XE6 - Não foi possivel atualizar essa lista de tarefas");
             }
