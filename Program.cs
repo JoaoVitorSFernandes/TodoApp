@@ -1,11 +1,14 @@
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
 using TodoApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TodoContext>();
-builder.Services.AddControllers();
+
+builder.Services.AddControllers()
+.ConfigureApiBehaviorOptions(options =>{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo{Title = "TodoApp", Version = "v1"});
