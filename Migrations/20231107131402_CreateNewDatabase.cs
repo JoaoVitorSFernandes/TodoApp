@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TodoApp.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDatabase : Migration
+    public partial class CreateNewDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,6 +33,7 @@ namespace TodoApp.Migrations
                     Title = table.Column<string>(type: "NVARCHAR", maxLength: 1023, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
                     Status = table.Column<bool>(type: "Boolean", nullable: false, defaultValue: false),
+                    Favorite = table.Column<bool>(type: "Boolean", nullable: false, defaultValue: false),
                     Date = table.Column<DateTime>(type: "SMALLDATETIME", maxLength: 60, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "SMALLDATETIME", maxLength: 60, nullable: false),
                     ListTasksId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -57,6 +58,7 @@ namespace TodoApp.Migrations
                     Title = table.Column<string>(type: "NVARCHAR", maxLength: 1023, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
                     Status = table.Column<bool>(type: "Boolean", nullable: false, defaultValue: false),
+                    Favorite = table.Column<bool>(type: "Boolean", nullable: false, defaultValue: false),
                     Date = table.Column<DateTime>(type: "SMALLDATETIME", maxLength: 60, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "SMALLDATETIME", maxLength: 60, nullable: false),
                     TodoId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -65,7 +67,7 @@ namespace TodoApp.Migrations
                 {
                     table.PrimaryKey("PK_SubTaskId", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SubTask_Task",
+                        name: "FK_Task_SubTask",
                         column: x => x.TodoId,
                         principalTable: "Task",
                         principalColumn: "Id",
@@ -75,7 +77,8 @@ namespace TodoApp.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_SubTask_TodoId",
                 table: "SubTask",
-                column: "TodoId");
+                column: "TodoId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Task_ListTasksId",

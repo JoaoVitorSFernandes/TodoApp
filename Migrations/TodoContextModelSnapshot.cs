@@ -39,7 +39,10 @@ namespace TodoApp.Migrations
                         .HasColumnName("Description");
 
                     b.Property<bool>("Favorite")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("Boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("Favorite");
 
                     b.Property<bool>("Status")
                         .ValueGeneratedOnAdd()
@@ -138,7 +141,7 @@ namespace TodoApp.Migrations
                         .HasForeignKey("TodoApp.Models.SubTodo", "TodoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_SubTask_Task");
+                        .HasConstraintName("FK_Task_SubTask");
 
                     b.Navigation("Todo");
                 });

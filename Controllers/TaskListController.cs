@@ -27,7 +27,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<List<Todos>>(listTasks));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todos>("02XE1 - Internal Server Failure"));
             }
@@ -54,7 +54,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<Todos>(listTask));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todos>("02XE4 - Internal Server Failure"));
             }
@@ -86,7 +86,7 @@ namespace TodoApp.Controllers
 
                 return Created($"v1/tasks/{listTask.Id}", new ResultViewModel<Todos>(listTask));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todos>("02XE6 - Internal Server Failure"));
             }
@@ -122,7 +122,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<Todos>(listTask));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todos>("02XE9 - Internal Server Failure."));
             }
@@ -152,7 +152,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<dynamic>(new { message = "Task list deleted successfully." }));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, "02XE15 - Internal Server Failure.");
             }
@@ -194,7 +194,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<dynamic>(streamPDF));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todos>("02XE17 - Internal Server Failure."));
             }

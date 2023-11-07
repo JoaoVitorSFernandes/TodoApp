@@ -11,8 +11,8 @@ using TodoApp.Data;
 namespace TodoApp.Migrations
 {
     [DbContext(typeof(TodoContext))]
-    [Migration("20231106165530_Fix_Subtask-Task_Relationships")]
-    partial class Fix_SubtaskTask_Relationships
+    [Migration("20231107131402_CreateNewDatabase")]
+    partial class CreateNewDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,12 @@ namespace TodoApp.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("TEXT")
                         .HasColumnName("Description");
+
+                    b.Property<bool>("Favorite")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("Boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("Favorite");
 
                     b.Property<bool>("Status")
                         .ValueGeneratedOnAdd()
@@ -85,6 +91,12 @@ namespace TodoApp.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("TEXT")
                         .HasColumnName("Description");
+
+                    b.Property<bool>("Favorite")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("Boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("Favorite");
 
                     b.Property<int>("ListTasksId")
                         .HasColumnType("INTEGER");
@@ -132,7 +144,7 @@ namespace TodoApp.Migrations
                         .HasForeignKey("TodoApp.Models.SubTodo", "TodoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_SubTask_Task");
+                        .HasConstraintName("FK_Task_SubTask");
 
                     b.Navigation("Todo");
                 });

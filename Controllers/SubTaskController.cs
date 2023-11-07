@@ -28,7 +28,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<SubTodo>(subTask));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<SubTodo>("03XE1 - Internal Server Failure."));
             }
@@ -38,6 +38,7 @@ namespace TodoApp.Controllers
             }
         }
 
+
         [HttpPost("setmaintask/{id:int}")]
         public async Task<IActionResult> SetMainTaskAsync(
             [FromRoute] int id,
@@ -46,9 +47,9 @@ namespace TodoApp.Controllers
             try
             {
                 var subTask = await context
-                    .SubTodos
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == id);
+                                    .SubTodos
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(x => x.Id == id);
 
                 if (subTask == null)
                     return NotFound(new ResultViewModel<Todos>("02XE3 - Unable to find task in database"));
@@ -68,15 +69,16 @@ namespace TodoApp.Controllers
 
                 return Created($"v1/task/{todo.Id}", new ResultViewModel<Todo>(todo));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE3 - Internal Server Failure."));
+                return StatusCode(500, new ResultViewModel<SubTodo>("03XE3 - Internal Server Failure."));
             }
             catch
             {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE4 - Internal Server Failure."));
+                return StatusCode(500, new ResultViewModel<SubTodo>("03XE4 - Internal Server Failure."));
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> PostAsync(
@@ -90,7 +92,7 @@ namespace TodoApp.Controllers
 
                 var subTodo = new SubTodo
                 {
-                    TodoId = model.ListTasksId,
+                    TodoId = model.ListOrTasksId,
                     Title = model.Title,
                     Description = model.Description,
                     Date = model.Date
@@ -101,7 +103,7 @@ namespace TodoApp.Controllers
 
                 return Created($"v1/subtask/{subTodo.Id}", new ResultViewModel<SubTodo>(subTodo));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE3 - Internal Server Failure."));
             }
@@ -110,6 +112,7 @@ namespace TodoApp.Controllers
                 return StatusCode(500, new ResultViewModel<Todo>("03XE4 - Internal Server Failure."));
             }
         }
+
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutAsync(
@@ -139,7 +142,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<SubTodo>(subTask));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE5 - Internal Server Failure."));
             }
@@ -148,6 +151,7 @@ namespace TodoApp.Controllers
                 return StatusCode(500, new ResultViewModel<Todo>("03XE6 - Internal Server Failure."));
             }
         }
+
 
         [HttpPut("status/{id:int}")]
         public async Task<IActionResult> AlterStatusAsync(
@@ -181,6 +185,7 @@ namespace TodoApp.Controllers
             }
         }
 
+
         [HttpPut("favorite/{id:int}")]
         public async Task<IActionResult> AlterFavoriteAsync(
             [FromRoute] int id,
@@ -203,7 +208,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<SubTodo>(subTask));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<SubTodo>("03XE5 - Internal Server Failure."));
             }
@@ -212,6 +217,7 @@ namespace TodoApp.Controllers
                 return StatusCode(500, new ResultViewModel<SubTodo>("03XE6 - Internal Server Failure."));
             }
         }
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteAsync(
@@ -233,7 +239,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<dynamic>(new { message = "Task list deleted successfully." }));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<SubTodo>("03XE7 - Internal Server Failure."));
             }

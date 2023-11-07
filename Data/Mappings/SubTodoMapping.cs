@@ -32,6 +32,11 @@ namespace TodoApp.Data.Mappings
                 .HasColumnType("Boolean")
                 .HasDefaultValue(false);
 
+            builder.Property(x => x.Favorite)
+                .HasColumnName("Favorite")
+                .HasColumnType("Boolean")
+                .HasDefaultValue(false);
+
             builder.Property(x => x.Date)
                 .HasColumnName("Date")
                 .HasColumnType("SMALLDATETIME")

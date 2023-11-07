@@ -25,7 +25,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<List<Todo>>(task));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE1 - Internal Server Failure."));
             }
@@ -49,7 +49,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<List<Todo>>(task));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE1 - Internal Server Failure."));
             }
@@ -76,7 +76,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<Todo>(task));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE1 - Internal Server Failure."));
             }
@@ -98,7 +98,7 @@ namespace TodoApp.Controllers
 
                 var todo = new Todo
                 {
-                    ListTasksId = model.ListTasksId,
+                    ListTasksId = model.ListOrTasksId,
                     Title = model.Title,
                     Description = model.Description,
                     Date = model.Date
@@ -109,7 +109,7 @@ namespace TodoApp.Controllers
 
                 return Created($"v1/task/{todo.Id}", new ResultViewModel<Todo>(todo));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE3 - Internal Server Failure."));
             }
@@ -147,7 +147,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<SubTodo>(subTask));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE5 - Internal Server Failure."));
             }
@@ -179,7 +179,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<Todo>(task));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<SubTodo>("03XE5 - Internal Server Failure."));
             }
@@ -211,7 +211,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<Todo>(task));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE5 - Internal Server Failure."));
             }
@@ -241,7 +241,7 @@ namespace TodoApp.Controllers
 
                 return Ok(new ResultViewModel<dynamic>(new { message = "Task list deleted successfully." }));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todo>("03XE7 - Internal Server Failure."));
             }
@@ -251,27 +251,27 @@ namespace TodoApp.Controllers
             }
         }
 
-        [HttpDelete("remtaskcompleted")]
+        [HttpDelete("delcompletedtasks")]
         public async Task<IActionResult> DeleteAllCompletedTasksAsync(
             [FromServices] TodoContext context)
         {
             try
             {
-                var taskCompleted = await context
+                var tasksCompleted = await context
                                             .Todos
                                             .AsNoTracking()
                                             .Where(x => x.Status == true)
                                             .ToListAsync();
 
-                if (taskCompleted == null)
+                if (tasksCompleted == null)
                     return NotFound(new ResultViewModel<Todos>("02XE11 - Unable to find completed task in database"));
 
-                context.Todos.RemoveRange(taskCompleted);
+                context.Todos.RemoveRange(tasksCompleted);
                 await context.SaveChangesAsync();
 
                 return Ok(new ResultViewModel<dynamic>(new { message = "Tasks completed deleted successfully." }));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<Todos>("02XE12 - Internal Server Failure."));
             }

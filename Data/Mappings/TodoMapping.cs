@@ -32,7 +32,7 @@ namespace TodoApp.Data.Mappings
                 .HasColumnType("Boolean")
                 .HasDefaultValue(false);
 
-                builder.Property(x => x.Favorite)
+            builder.Property(x => x.Favorite)
                 .HasColumnName("Favorite")
                 .HasColumnType("Boolean")
                 .HasDefaultValue(false);
@@ -49,13 +49,15 @@ namespace TodoApp.Data.Mappings
 
             builder.HasOne(x => x.SubTodo)
                 .WithOne(x => x.Todo)
-                .HasConstraintName("FK_SubTask_Task")
+                .HasConstraintName("FK_Task_SubTask")
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(x => x.ListTasks)
                 .WithMany(x => x.Tasks)
                 .HasConstraintName("FK_Task_Tasks")
                 .OnDelete(DeleteBehavior.Cascade);
+        
+        
         }
     }
 }
