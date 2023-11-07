@@ -8,57 +8,9 @@ using TodoApp.ViewModels;
 namespace TodoApp.Controllers
 {
     [ApiController]
-    [Route("v1/task")]
-    public class TaskController : ControllerBase
+    [Route("v1/subtask")]
+    public sealed class SubTaskController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> GetAsync(
-            [FromServices] TodoContext context)
-        {
-            try
-            {
-                var task = await context
-                                    .Todos
-                                    .AsNoTracking()
-                                    .Include(x => x.SubTodo)
-                                    .ToListAsync();
-
-                return Ok(new ResultViewModel<List<Todo>>(task));
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE1 - Internal Server Failure."));
-            }
-            catch
-            {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE2 - Internal Server Failure."));
-            }
-        }
-
-        [HttpGet("favorite")]
-        public async Task<IActionResult> GetAllFavoritesAsync(
-            [FromServices] TodoContext context)
-        {
-            try
-            {
-                var task = await context
-                                    .Todos
-                                    .AsNoTracking()
-                                    .Where(x => x.Favorite == true)
-                                    .ToListAsync();
-
-                return Ok(new ResultViewModel<List<Todo>>(task));
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE1 - Internal Server Failure."));
-            }
-            catch
-            {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE2 - Internal Server Failure."));
-            }
-        }
-
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdAsync(
             [FromRoute] int id,
@@ -66,23 +18,63 @@ namespace TodoApp.Controllers
         {
             try
             {
-                var task = await context
-                                    .Todos
+                var subTask = await context
+                                    .SubTodos
                                     .AsNoTracking()
                                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                if (task == null)
+                if (subTask == null)
                     return NotFound(new ResultViewModel<Todos>("02XE3 - Unable to find task in database"));
 
-                return Ok(new ResultViewModel<Todo>(task));
+                return Ok(new ResultViewModel<SubTodo>(subTask));
             }
             catch (DbUpdateException ex)
             {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE1 - Internal Server Failure."));
+                return StatusCode(500, new ResultViewModel<SubTodo>("03XE1 - Internal Server Failure."));
             }
             catch
             {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE2 - Internal Server Failure."));
+                return StatusCode(500, new ResultViewModel<SubTodo>("03XE2 - Internal Server Failure."));
+            }
+        }
+
+        [HttpPost("setmaintask/{id:int}")]
+        public async Task<IActionResult> SetMainTaskAsync(
+            [FromRoute] int id,
+            [FromServices] TodoContext context)
+        {
+            try
+            {
+                var subTask = await context
+                    .SubTodos
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                if (subTask == null)
+                    return NotFound(new ResultViewModel<Todos>("02XE3 - Unable to find task in database"));
+
+                Todo todo = new Todo
+                {
+                    Title = subTask.Title,
+                    Description = subTask.Description,
+                    Status = subTask.Status,
+                    Favorite = subTask.Favorite,
+                    Date = subTask.Date
+                };
+
+                context.SubTodos.Remove(subTask);
+                await context.Todos.AddAsync(todo);
+                await context.SaveChangesAsync();
+
+                return Created($"v1/task/{todo.Id}", new ResultViewModel<Todo>(todo));
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, new ResultViewModel<Todo>("03XE3 - Internal Server Failure."));
+            }
+            catch
+            {
+                return StatusCode(500, new ResultViewModel<Todo>("03XE4 - Internal Server Failure."));
             }
         }
 
@@ -94,20 +86,20 @@ namespace TodoApp.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest(new ResultViewModel<Todo>(ModelState.GetErros()));
+                    return BadRequest(new ResultViewModel<SubTodo>(ModelState.GetErros()));
 
-                var todo = new Todo
+                var subTodo = new SubTodo
                 {
-                    ListTasksId = model.ListTasksId,
+                    TodoId = model.ListTasksId,
                     Title = model.Title,
                     Description = model.Description,
                     Date = model.Date
                 };
 
-                await context.Todos.AddAsync(todo);
+                await context.SubTodos.AddAsync(subTodo);
                 await context.SaveChangesAsync();
 
-                return Created($"v1/task/{todo.Id}", new ResultViewModel<Todo>(todo));
+                return Created($"v1/subtask/{subTodo.Id}", new ResultViewModel<SubTodo>(subTodo));
             }
             catch (DbUpdateException ex)
             {
@@ -136,7 +128,7 @@ namespace TodoApp.Controllers
                                 .FirstOrDefaultAsync(x => x.Id == id);
 
                 if (subTask == null)
-                    return NotFound(new ResultViewModel<Todos>("02XE8 - Unable to update this sub task. Inform one task valid."));
+                    return NotFound(new ResultViewModel<SubTodo>("02XE8 - Unable to update this task. Inform one task valid."));
 
                 subTask.Title = model.Title;
                 subTask.Description = model.Description;
@@ -164,22 +156,22 @@ namespace TodoApp.Controllers
         {
             try
             {
-                var task = await context
-                                .Todos
+                var subTask = await context
+                                .SubTodos
                                 .AsNoTracking()
                                 .FirstOrDefaultAsync(x => x.Id == id);
 
-                if (task == null)
+                if (subTask == null)
                     return NotFound(new ResultViewModel<Todos>("02XE8 - Unable to update this task. Inform one task valid."));
 
-                task.Status = !task.Status;
+                subTask.Status = true;
 
-                context.Todos.Update(task);
+                context.SubTodos.Update(subTask);
                 await context.SaveChangesAsync();
 
-                return Ok(new ResultViewModel<Todo>(task));
+                return Ok(new ResultViewModel<SubTodo>(subTask));
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 return StatusCode(500, new ResultViewModel<SubTodo>("03XE5 - Internal Server Failure."));
             }
@@ -196,28 +188,28 @@ namespace TodoApp.Controllers
         {
             try
             {
-                var task = await context
-                                .Todos
+                var subTask = await context
+                                .SubTodos
                                 .AsNoTracking()
                                 .FirstOrDefaultAsync(x => x.Id == id);
 
-                if (task == null)
+                if (subTask == null)
                     return NotFound(new ResultViewModel<Todos>("02XE8 - Unable to update this task. Inform one task valid."));
 
-                task.Favorite = !task.Favorite;
+                subTask.Favorite = !subTask.Favorite;
 
-                context.Todos.Update(task);
+                context.SubTodos.Update(subTask);
                 await context.SaveChangesAsync();
 
-                return Ok(new ResultViewModel<Todo>(task));
+                return Ok(new ResultViewModel<SubTodo>(subTask));
             }
             catch (DbUpdateException ex)
             {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE5 - Internal Server Failure."));
+                return StatusCode(500, new ResultViewModel<SubTodo>("03XE5 - Internal Server Failure."));
             }
             catch
             {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE6 - Internal Server Failure."));
+                return StatusCode(500, new ResultViewModel<SubTodo>("03XE6 - Internal Server Failure."));
             }
         }
 
@@ -228,56 +220,26 @@ namespace TodoApp.Controllers
         {
             try
             {
-                var task = await context
-                                    .Todos
+                var subTask = await context
+                                    .SubTodos
                                     .AsNoTracking()
                                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                if (task == null)
+                if (subTask == null)
                     return BadRequest("02XE14 - Unable to delete this task. Inform one taks valid.");
 
-                context.Todos.Remove(task);
+                context.SubTodos.Remove(subTask);
                 await context.SaveChangesAsync();
 
                 return Ok(new ResultViewModel<dynamic>(new { message = "Task list deleted successfully." }));
             }
             catch (DbUpdateException ex)
             {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE7 - Internal Server Failure."));
+                return StatusCode(500, new ResultViewModel<SubTodo>("03XE7 - Internal Server Failure."));
             }
             catch
             {
-                return StatusCode(500, new ResultViewModel<Todo>("03XE8 - Internal Server Failure."));
-            }
-        }
-
-        [HttpDelete("remtaskcompleted")]
-        public async Task<IActionResult> DeleteAllCompletedTasksAsync(
-            [FromServices] TodoContext context)
-        {
-            try
-            {
-                var taskCompleted = await context
-                                            .Todos
-                                            .AsNoTracking()
-                                            .Where(x => x.Status == true)
-                                            .ToListAsync();
-
-                if (taskCompleted == null)
-                    return NotFound(new ResultViewModel<Todos>("02XE11 - Unable to find completed task in database"));
-
-                context.Todos.RemoveRange(taskCompleted);
-                await context.SaveChangesAsync();
-
-                return Ok(new ResultViewModel<dynamic>(new { message = "Tasks completed deleted successfully." }));
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(500, new ResultViewModel<Todos>("02XE12 - Internal Server Failure."));
-            }
-            catch
-            {
-                return StatusCode(500, new ResultViewModel<Todos>("02XE13 - Internal Server Failure."));
+                return StatusCode(500, new ResultViewModel<SubTodo>("03XE8 - Internal Server Failure."));
             }
         }
 

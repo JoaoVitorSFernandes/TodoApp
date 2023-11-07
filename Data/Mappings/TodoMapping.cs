@@ -32,6 +32,11 @@ namespace TodoApp.Data.Mappings
                 .HasColumnType("Boolean")
                 .HasDefaultValue(false);
 
+                builder.Property(x => x.Favorite)
+                .HasColumnName("Favorite")
+                .HasColumnType("Boolean")
+                .HasDefaultValue(false);
+
             builder.Property(x => x.Date)
                 .HasColumnName("Date")
                 .HasColumnType("SMALLDATETIME")
@@ -42,7 +47,7 @@ namespace TodoApp.Data.Mappings
                 .HasColumnType("SMALLDATETIME")
                 .HasMaxLength(60);
 
-            builder.HasMany(x => x.SubTodo)
+            builder.HasOne(x => x.SubTodo)
                 .WithOne(x => x.Todo)
                 .HasConstraintName("FK_SubTask_Task")
                 .OnDelete(DeleteBehavior.Cascade);

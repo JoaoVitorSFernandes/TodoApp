@@ -132,36 +132,6 @@ namespace TodoApp.Controllers
             }
         }
 
-        [HttpDelete("remtaskcompleted")]
-        public async Task<IActionResult> DeleteAllCompletedTasksAsync(
-            [FromServices] TodoContext context)
-        {
-            try
-            {
-                var taskCompleted = await context
-                                            .ListTodos
-                                            .AsNoTracking()
-                                            .Include(x=> x.Tasks.Where(x => x.Status == true).ToList())
-                                            .ToListAsync();
-
-                if (taskCompleted == null)
-                    return NotFound(new ResultViewModel<Todos>("02XE11 - Unable to find completed task in database"));
-
-                context.ListTodos.RemoveRange(taskCompleted);
-                await context.SaveChangesAsync();
-
-                return Ok(new ResultViewModel<dynamic>(new { message = "Tasks completed deleted successfully." }));
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(500, new ResultViewModel<Todos>("02XE12 - Internal Server Failure."));
-            }
-            catch
-            {
-                return StatusCode(500, new ResultViewModel<Todos>("02XE13 - Internal Server Failure."));
-            }
-        }
-
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteAsync(
             [FromRoute] int id,

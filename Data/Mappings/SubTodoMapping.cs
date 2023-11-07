@@ -43,7 +43,7 @@ namespace TodoApp.Data.Mappings
                 .HasMaxLength(60);
 
             builder.HasOne(x => x.Todo)
-                .WithMany(x => x.SubTodo)
+                .WithOne(x => x.SubTodo)
                 .HasConstraintName("FK_SubTask_Task")
                 .OnDelete(DeleteBehavior.Cascade);
 

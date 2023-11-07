@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TodoApp.Data;
 
@@ -10,9 +11,11 @@ using TodoApp.Data;
 namespace TodoApp.Migrations
 {
     [DbContext(typeof(TodoContext))]
-    partial class TodoContextModelSnapshot : ModelSnapshot
+    [Migration("20231106134808_IncludeFileds")]
+    partial class IncludeFileds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.13");
@@ -38,9 +41,6 @@ namespace TodoApp.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("Description");
 
-                    b.Property<bool>("Favorite")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("Boolean")
@@ -59,8 +59,7 @@ namespace TodoApp.Migrations
                     b.HasKey("Id")
                         .HasName("PK_SubTaskId");
 
-                    b.HasIndex("TodoId")
-                        .IsUnique();
+                    b.HasIndex("TodoId");
 
                     b.ToTable("SubTask", (string)null);
                 });
@@ -86,12 +85,6 @@ namespace TodoApp.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("Description");
 
-                    b.Property<bool>("Favorite")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("Boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("Favorite");
-
                     b.Property<int>("ListTasksId")
                         .HasColumnType("INTEGER");
 
@@ -100,6 +93,9 @@ namespace TodoApp.Migrations
                         .HasColumnType("Boolean")
                         .HasDefaultValue(false)
                         .HasColumnName("Status");
+
+                    b.Property<int>("TasksId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -134,8 +130,8 @@ namespace TodoApp.Migrations
             modelBuilder.Entity("TodoApp.Models.SubTodo", b =>
                 {
                     b.HasOne("TodoApp.Models.Todo", "Todo")
-                        .WithOne("SubTodo")
-                        .HasForeignKey("TodoApp.Models.SubTodo", "TodoId")
+                        .WithMany("SubTodo")
+                        .HasForeignKey("TodoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_SubTask_Task");
@@ -157,8 +153,7 @@ namespace TodoApp.Migrations
 
             modelBuilder.Entity("TodoApp.Models.Todo", b =>
                 {
-                    b.Navigation("SubTodo")
-                        .IsRequired();
+                    b.Navigation("SubTodo");
                 });
 
             modelBuilder.Entity("TodoApp.Models.Todos", b =>
